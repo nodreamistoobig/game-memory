@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 
-class Card {
+class Card { //TODO: можно Card вынести в отдельный класс
     private Paint p = new Paint();
     int color, backColor = Color.DKGRAY;
     boolean isOpen = false;
@@ -42,7 +42,7 @@ class Card {
 
     public void draw(Canvas c) {
         //рисуем карту в виде цветного прямоугольника
-        if (isOpen) {
+        if (isOpen) { //TODO: условие с 1 действием можно не обрамлять фигурными скобками
             p.setColor(color);
         } else p.setColor(backColor);
         c.drawRect(x, y, x + width, y + height, p);
@@ -50,13 +50,13 @@ class Card {
 }
 
 public class TilesView extends View {
-    int openedCard = 0;
+    int openedCard = 0; //TODO: счетчик карт я бы назвала во множественном числе, а открытую карту (переменная ниже) также, но в единственном. Наверное, это уже придирки, но так очевиднее
     Card openCard;
     final int PAUSE_LENGTH = 2;
     boolean isOnPause = false;
     int n = 4;
     static ArrayList<Card> listCards = new ArrayList<>();
-    int widthCard = 200;
+    int widthCard = 200; //TODO: можно переменные одного типа объявить в 1 строку
     int heightCard = 300;
     int distance = 55;
 
@@ -68,7 +68,7 @@ public class TilesView extends View {
 
     public TilesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        // 1) заполнить массив tiles случайными цветами
+        // 1) заполнить массив tiles случайными цветами //TODO:комментарий можно убрать
         /*
         cards[0] = new Card(0, 0, 200, 300, Color.YELLOW);
         cards[1] = new Card(200 + 50, 0, 200 + 50, 300, Color.YELLOW);
@@ -88,6 +88,7 @@ public class TilesView extends View {
             }
         }
         for (int i = 0; i < listCards.size(); i += 2) {
+            //TODO: вынести Color в отдельную переменную
             listCards.get(i).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
             listCards.get(i + 1).color = Color.rgb(i * 45 + 25, i * 10, i * 25 + 15);
         }
@@ -100,7 +101,7 @@ public class TilesView extends View {
         width = getWidth();
         height = getHeight();
         // 2) отрисовка плиток
-        Paint p = new Paint();
+        Paint p = new Paint(); //TODO: переменная p не используется, можно убрать
         p.setColor(Color.GREEN);
 
         for (Card c : listCards) {
@@ -121,7 +122,7 @@ public class TilesView extends View {
         if (event.getAction() == MotionEvent.ACTION_DOWN && !isOnPause) {
             // палец коснулся экрана
             for (Card c : listCards) {
-                if (openedCard == 0) {
+                if (openedCard == 0) { //TODO:объединить 2 условия в одно
                     if (c.flip(x, y)) {
                         Log.d("mytag", "card flipped: " + openedCard);
                         openedCard++;
@@ -136,13 +137,13 @@ public class TilesView extends View {
                     if (c.flip(x, y) && openCard != c) {
                         openedCard++;
                         if (openCard.color == c.color) {
-                            invalidate();
-                            PauseTask task = new PauseTask();
+                            invalidate(); //TODO: переместить строчку перед текущим условием. Повторяющуюся строку 149 удалить
+                            PauseTask task = new PauseTask(); //TODO: здесь можно не запускать поток, убрать строки 141-142, вместо них обнулить счетчик открытых карт
                             task.execute(0);
                             isOnPause = true;
                             listCards.remove(openCard);
                             listCards.remove(c);
-                            return true;
+                            return true; //TODO: переместить строку после условия
                         } else {
                             // запуск задержки
                             invalidate();
@@ -170,7 +171,7 @@ public class TilesView extends View {
 
     public void onClick() {
         listCards.clear();
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) { //TODO: код с 174 по 183 строки был в начале, стоит вынести этот код в отдельную функцию
             for (int j = 0; j < n; j++) {
                 listCards.add(new Card((widthCard * j + distance * j) + distance, heightCard * i + distance * i, widthCard, heightCard, Color.LTGRAY));
                 Collections.shuffle(listCards);
